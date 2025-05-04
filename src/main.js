@@ -10,6 +10,8 @@ import { faSearch, faHistory, faRemove, faMapMarkedAlt } from "@fortawesome/free
 
 library.add(faSearch, faHistory, faRemove, faMapMarkedAlt);
 
+document.title = import.meta.env.VITE_APP_NAME || 'ZipSearch'
+
 createApp(App)
-    .component("font-awesome-icon", FontAwesomeIcon)
-    .mount("#app");
+.component("font-awesome-icon", FontAwesomeIcon)
+.mount("#app");
