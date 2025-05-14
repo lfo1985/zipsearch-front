@@ -9,7 +9,7 @@ import {mapGetters, mapActions} from 'vuex';
                 Histórico de buscas
             </h5>
             <template v-if="getHistory().length > 0">
-                <div class="d-flex justify-content-end align-items-center mb-4">
+                <div class="d-flex justify-content-end align-items-center mb-4 mt-4">
                     <button @click="deleteAllZipcode" class="btn btn-danger btn-sm ms-2">
                         <font-awesome-icon icon="trash-alt" class="me-2" />
                         Limpar histórico
@@ -19,13 +19,13 @@ import {mapGetters, mapActions} from 'vuex';
                 <ul class="list-group">
                     <li v-for="item in getHistory()" :key="item.id" class="list-group-item">
                         <div class="row">
-                            <div class="col-md-2 col-sm-12">{{ item.cep }}</div>
-                            <div class="col-md-8 col-sm-12">
+                            <div class="col-md-2">{{ item.cep }}</div>
+                            <div class="col-md-8">
                                 <small>
                                     {{ item.logradouro }} - {{ item.bairro }} - {{ item.localidade }} - {{ item.uf }}
                                 </small>
                             </div>
-                            <div class="col-md-2 col-sm-12 d-flex justify-content-end align-items-center">
+                            <div class="col-md-2 d-flex justify-content-end align-items-center">
                                 <div>
                                     <button @click="deleteZipcode(item._id)" class="btn btn-danger btn-sm ms-2">
                                         <font-awesome-icon icon="remove" />
