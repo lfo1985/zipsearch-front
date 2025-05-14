@@ -4,9 +4,12 @@ const store = createStore({
   state() {
     return {
       zipcode: null,
+      listZipcode: [],
       showResults: false,
-      showNoResults: false,
       history: [],
+      error: false,
+      type: null,
+      loading: false,
     };
   },
   mutations: {
@@ -16,12 +19,21 @@ const store = createStore({
     showResults(state, value) {
       state.showResults = value;
     },
-    showNoResults(state, value) {
-      state.showNoResults = value;
-    },
     history(state, value) {
       state.history = value;
-    }
+    },
+    listZipcode(state, value) {
+      state.listZipcode = value;
+    },
+    error(state, value) {
+      state.error = value;
+    },
+    type(state, value) {
+      state.type = value;
+    },
+    loading(state, value) {
+      state.loading = value;
+    },
   },
   actions: {
     setZipcode({ commit }, value) {
@@ -30,11 +42,20 @@ const store = createStore({
     setShowResults({ commit }, value) {
       commit("showResults", value);
     },
-    setShowNoResults({ commit }, value) {
-      commit("showNoResults", value);
-    },
     setHistory({ commit }, value) {
       commit("history", value);
+    },
+    setListZipcode({ commit }, value) {
+      commit("listZipcode", value);
+    },
+    setError({ commit }, value) {
+      commit("error", value);
+    },
+    setType({ commit }, value) {
+      commit("type", value);
+    },
+    setLoading({ commit }, value) {
+      commit("loading", value);
     },
   },
   getters: {
@@ -44,25 +65,22 @@ const store = createStore({
     getShowResults(state) {
       return state.showResults;
     },
-    getShowNoResults(state) {
-      return state.showNoResults;
-    },
     getHistory(state) {
       return state.history;
-    }
+    },
+    getListZipcode(state) {
+      return state.listZipcode;
+    },
+    getError(state) {
+      return state.error;
+    },
+    getType(state) {
+      return state.type;
+    },
+    getLoading(state) {
+      return state.loading;
+    },
   },
-});
-
-store.subscribe((mutation, state) => {
-    if(mutation.type === 'zipcode') {
-        if(state.zipcode) {
-            state.showResults = true;
-            state.showNoResults = false;
-        } else {
-            state.showResults = false;
-            state.showNoResults = true;
-        }
-    }
 });
 
 export default store;

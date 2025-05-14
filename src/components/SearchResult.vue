@@ -1,26 +1,33 @@
 <script setup>
-import { mapState, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import ItemResult from './ItemResult.vue';
+import BtnAddHistory from './BtnAddHistory.vue';
 </script>
 <template>
-    <div class="card mb-4">
+    <div v-if="getShowResults()" class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">
                 <font-awesome-icon icon="map-marked-alt" class="me-2" />
                 Resultado
             </h5>
-            <div v-if="!getShowResults() && !getShowNoResults()" class="alert alert-info mt-4">
-                <p class="m-0">Por favor, digite o CEP acima e clique em "Buscar" para ver os resultados.</p>
+            <div v-if="getType() === 'cep'">
+                <div class="d-flex justify-content-end align-items-center">
+                    <BtnAddHistory :zipcode="getZipcode()" />
+                </div>
+                <ItemResult :zipcode="getZipcode()" />
             </div>
-            <div v-if="getShowNoResults()" class="alert alert-danger mt-4">
-                <p class="m-0">CEP não encontrado. Por favor, verifique o número e tente novamente.</p>
+            <div v-if="getType() === 'endereco'">
+                <div v-for="itemZipcode in getListZipcode()" class="border-top border-2 border-secondary mt-3 pt-3">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <BtnAddHistory :zipcode="itemZipcode" />
+                    </div>
+                    <ItemResult :zipcode="itemZipcode" />
+                </div>
             </div>
-            <ul v-if="getShowResults()" class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Logradouro:</strong> <span v-html="getZipcode()?.logradouro || '-'"></span></li>
-                <li class="list-group-item"><strong>Bairro:</strong> <span v-html="getZipcode()?.bairro || '-'"></span></li>
-                <li class="list-group-item"><strong>Cidade:</strong> <span v-html="getZipcode()?.localidade || '-'"></span></li>
-                <li class="list-group-item"><strong>UF:</strong> <span v-html="getZipcode()?.uf || '-'"></span></li>
-            </ul>
         </div>
+    </div>
+    <div v-if="getError()" class="alert alert-danger mt-4">
+        <p class="m-0">Não foi possível localizar o endereço com as informações fornecidas. Verifique o CEP ou os dados de cidade, estado e logradouro.</p>
     </div>
 </template>
 
@@ -28,7 +35,27 @@ import { mapState, mapGetters } from 'vuex';
 export default {
     name: 'SearchResult',
     methods: {
-        ...mapGetters(['getZipcode', 'getShowResults', 'getShowNoResults']),
+        ...mapGetters([
+            'getZipcode',
+            'getShowResults',
+            'getListZipcode',
+            'getError',
+            'getType'
+        ]),
+        ...mapActions([
+            'setHistory'
+        ]),
+        registerHistory(zipcode) {
+            Object.assign(zipcode, {
+                user_id: localStorage.getItem('user_id')
+            });
+
+            this.$api.post('zipcode', zipcode).then(() => {
+                this.$api.get('zipcode/'+localStorage.getItem('user_id')).then(response => {
+                    this.setHistory(response.data.data);
+                });
+            });
+        },
     },
 };
 </script>

@@ -1,6 +1,5 @@
 <script setup>
 import {mapGetters, mapActions} from 'vuex';
-import getZipcodes from '../services/zipcode';
 </script>
 <template>
     <div class="card">
@@ -9,22 +8,37 @@ import getZipcodes from '../services/zipcode';
                 <font-awesome-icon icon="history" class="me-2" />
                 Histórico de buscas
             </h5>
+            <template v-if="getHistory().length > 0">
+                <div class="d-flex justify-content-end align-items-center mb-4">
+                    <button @click="deleteAllZipcode" class="btn btn-danger btn-sm ms-2">
+                        <font-awesome-icon icon="trash-alt" class="me-2" />
+                        Limpar histórico
+                    </button>
+                </div>
+                <p class="card-text">Aqui estão os CEPs que você pesquisou anteriormente:</p>
+                <ul class="list-group">
+                    <li v-for="item in getHistory()" :key="item.id" class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-2 col-sm-12">{{ item.cep }}</div>
+                            <div class="col-md-8 col-sm-12">
+                                <small>
+                                    {{ item.logradouro }} - {{ item.bairro }} - {{ item.localidade }} - {{ item.uf }}
+                                </small>
+                            </div>
+                            <div class="col-md-2 col-sm-12 d-flex justify-content-end align-items-center">
+                                <div>
+                                    <button @click="deleteZipcode(item._id)" class="btn btn-danger btn-sm ms-2">
+                                        <font-awesome-icon icon="remove" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </template>
             <div v-if="!getHistory().length" class="alert alert-warning mt-4" role="alert">
                 Nenhum CEP encontrado no histórico.
             </div>
-            <p v-if="getHistory().length > 0" class="card-text">Aqui estão os CEPs que você pesquisou anteriormente:</p>
-            <ul v-if="getHistory().length > 0" class="list-group">
-                <li v-for="item in getHistory()" :key="item.id" class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small>
-                            <strong>{{ item.cep }}</strong> - {{ item.logradouro }} - {{ item.bairro }} - {{ item.localidade }} - {{ item.uf }}
-                        </small>
-                        <button @click="deleteZipcode(item._id)" class="btn btn-danger btn-sm ms-2">
-                            <font-awesome-icon icon="remove" />
-                        </button>
-                    </div>
-                </li>
-            </ul>
         </div>
     </div>
 </template>
@@ -41,7 +55,12 @@ export default {
             });
         },
         deleteZipcode(id) {
-            return this.$api.delete('zipcode/delete/'+id).then(response => {
+            return this.$api.delete('zipcode/delete/'+id).then(() => {
+                this.getZipcodes();
+            });
+        },
+        deleteAllZipcode() {
+            return this.$api.delete('zipcode/'+localStorage.getItem('user_id')).then(() => {
                 this.getZipcodes();
             });
         },
