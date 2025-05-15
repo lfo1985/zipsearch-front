@@ -2,7 +2,7 @@
 import { mapActions, mapGetters } from 'vuex';
 </script>
 <template>
-    <div class="d-flex justify-content-between mb-4 w-100">
+    <div class="d-flex justify-content-between w-100">
         <div class="btn-group" role="group" aria-label="Tipo de pesquisa">
             <input type="radio" class="btn-check" value="cep" name="options" id="option1" autocomplete="off" :checked="getType() === 'cep'" @change="changeType">
             <label class="btn btn-outline-secondary" for="option1">CEP</label>
