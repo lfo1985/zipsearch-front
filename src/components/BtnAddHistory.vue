@@ -19,9 +19,11 @@ export default {
     },
     methods: {
         ...mapActions([
-            'setHistory'
+            'setHistory',
+            'setLoading',
         ]),
         registerHistory() {
+            this.setLoading(true);
             Object.assign(this.zipcode, {
                 user_id: localStorage.getItem('user_id')
             });
@@ -29,6 +31,7 @@ export default {
             this.$api.post('zipcode', this.zipcode).then(() => {
                 this.$api.get('zipcode/'+localStorage.getItem('user_id')).then(response => {
                     this.setHistory(response.data.data);
+                    this.setLoading(false);
                 });
             });
         },

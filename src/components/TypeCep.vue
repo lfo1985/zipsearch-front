@@ -3,6 +3,7 @@ import { mapActions } from "vuex";
 import axios from "axios";
 import onlyNumbers from "../utils/only-numbers";
 import zipValidate from "../utils/zip-validate";
+import InputText from "./Form/InputText.vue";
 </script>
 <template>
     <form @submit="handleSubmit">
@@ -10,14 +11,18 @@ import zipValidate from "../utils/zip-validate";
             <div class="col-md-12 col-sm-12 mb-2">
                 <div class="row">
                     <div class="col-md-6 col-sm-12 mb-2">
-                        <input maxLength="8" v-model="cep" id="cep" type="text" class="form-control mb-2"
+                        <!-- <input maxLength="8" v-model="cep" id="cep" type="text" class="form-control mb-2"
                             placeholder="Digite o CEP (ex: 01001000)" />
-                        <small v-if="isEmpty" class="text-danger">
+                        <small v-if="cepIsEmpty" class="text-danger">
                             Informe o cep para localizar os dados de endereço.
-                        </small>
-                        <small v-if="isInvalid" class="text-danger">
-                            O CEP informado não é válido.
-                        </small>
+                        </small> -->
+                        <InputText
+                            v-model="cep"
+                            id="cep"
+                            placeholder="Digite o CEP (ex: 01001000)"
+                            errorMessage="Informe o cep para localizar os dados de endereço."
+                            :isEmptyValue="cepIsEmpty"
+                        />
                     </div>
                 </div>
                 <div class="row">
@@ -39,17 +44,16 @@ export default {
     data() {
         return {
             cep: "",
-            isEmpty: false,
-            isInvalid: false,
+            cepIsEmpty: false,
             loading: false,
         };
     },
     watch: {
         cep(value) {
             if (value.length > 0) {
-                this.isEmpty = false;
+                this.cepIsEmpty = false;
             } else {
-                this.isEmpty = true;
+                this.cepIsEmpty = true;
             }
             this.cep = onlyNumbers(value);
         },
@@ -69,13 +73,7 @@ export default {
             event.preventDefault();
 
             if (this.cep === "") {
-                this.isEmpty = true;
-                document.querySelector("#cep").focus();
-                return;
-            }
-
-            if (zipValidate(this.cep) === false) {
-                this.isInvalid = true;
+                this.cepIsEmpty = true;
                 document.querySelector("#cep").focus();
                 return;
             }

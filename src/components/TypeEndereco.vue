@@ -1,28 +1,42 @@
 <script setup>
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import axios from 'axios';
+import InputText from './Form/InputText.vue';
 </script>
 <template>
     <form class="form" @submit="handleSubmit">
         <h6>* Informe apenas o endereço, sem o número e complemento.</h6>
         <div class="row">
             <div class="col-md-6 col-sm-12 mb-2">
-                <input v-model="endereco" id="endereco" type="text" class="form-control mb-2" placeholder="Digite o endereço" />
-                <small v-if="isEmptyEndereco" class="text-danger">
-                    Informe o endereço.
-                </small>
+                <InputText
+                    ref="endereco"
+                    v-model="endereco"
+                    id="endereco"
+                    placeholder="Digite o endereço"
+                    errorMessage="Informe o endereço."
+                    :isEmptyValue="enderecoIsEmpty"
+                />
             </div>
             <div class="col-md-4 col-sm-12 mb-2">
-                <input v-model="cidade" id="cidade" type="text" class="form-control mb-2" placeholder="Digite a cidade" />
-                <small v-if="isEmptyCidade" class="text-danger">
-                    Informe a cidade.
-                </small>
+                <InputText
+                    ref="cidade"
+                    v-model="cidade"
+                    id="cidade"
+                    placeholder="Digite a cidade"
+                    errorMessage="Informe a cidade."
+                    :isEmptyValue="cidadeIsEmpty"
+                />
             </div>
             <div class="col-md-2 col-sm-12">
-                <input maxlength="2" v-model="estado" id="estado" type="text" class="form-control mb-2" placeholder="Digite o UF" />
-                <small v-if="isEmptyEstado" class="text-danger">
-                    Informe o UF.
-                </small>
+                <InputText
+                    ref="estado"
+                    maxlength="2"
+                    v-model="estado"
+                    id="estado"
+                    placeholder="Digite o UF"
+                    errorMessage="Informe o UF."
+                    :isEmptyValue="estadoIsEmpty"
+                />
             </div>
         </div>
         <div class="row">
@@ -44,34 +58,11 @@ export default {
             endereco: '',
             cidade: '',
             estado: '',
-            isEmptyEndereco: false,
-            isEmptyCidade: false,
-            isEmptyEstado: false,
             loading: false,
+            enderecoIsEmpty: false,
+            cidadeIsEmpty: false,
+            estadoIsEmpty: false
         };
-    },
-    watch: {
-        endereco(value) {
-            if(value.length > 0) {
-                this.isEmptyEndereco = false;
-            } else {
-                this.isEmptyEndereco = true;
-            }
-        },
-        cidade(value) {
-            if(value.length > 0) {
-                this.isEmptyCidade = false;
-            } else {
-                this.isEmptyCidade = true;
-            }
-        },
-        estado(value) {
-            if(value.length > 0) {
-                this.isEmptyEstado = false;
-            } else {
-                this.isEmptyEstado = true;
-            }
-        },
     },
     mounted() {
         document.querySelector('#endereco').focus();
@@ -88,17 +79,17 @@ export default {
             event.preventDefault();
 
             if(this.endereco === '') {
-                this.isEmptyEndereco = true;
+                this.enderecoIsEmpty = true;
                 return;
             }
 
             if(this.cidade === '') {
-                this.isEmptyCidade = true;
+                this.cidadeIsEmpty = true;
                 return;
             }
 
             if(this.estado === '') {
-                this.isEmptyEstado = true;
+                this.estadoIsEmpty = true;
                 return;
             }
 
