@@ -2,7 +2,6 @@
 import { mapActions } from "vuex";
 import axios from "axios";
 import onlyNumbers from "../utils/only-numbers";
-import zipValidate from "../utils/zip-validate";
 import InputText from "./Form/InputText.vue";
 </script>
 <template>
@@ -11,11 +10,6 @@ import InputText from "./Form/InputText.vue";
             <div class="col-md-12 col-sm-12 mb-2">
                 <div class="row">
                     <div class="col-md-6 col-sm-12 mb-2">
-                        <!-- <input maxLength="8" v-model="cep" id="cep" type="text" class="form-control mb-2"
-                            placeholder="Digite o CEP (ex: 01001000)" />
-                        <small v-if="cepIsEmpty" class="text-danger">
-                            Informe o cep para localizar os dados de endereço.
-                        </small> -->
                         <InputText
                             v-model="cep"
                             id="cep"
