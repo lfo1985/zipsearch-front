@@ -40,3 +40,7 @@ Desenvolvido para facilitar o acesso a informações postais.
   ```bash
   npm run dev
   ```
+
+## Full Changelog
+
+[Veja todas as alterações nesta versão](https://github.com/lfo1985/zipsearch-front/commits/v.1.0.0)
